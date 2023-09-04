@@ -1,0 +1,7 @@
+config {
+    dependencies: ["posts_questions"]
+}
+
+select * from ${ref("posts_questions")}
+
+limit 100;
