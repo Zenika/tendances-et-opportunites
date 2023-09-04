@@ -1,6 +1,6 @@
 {
   "name": "tendances-et-opportunites",
   "dependencies": {
-    "@dataform/core": "2.4.2"
+    "@dataform/core": "2.6.7"
   }
 }
