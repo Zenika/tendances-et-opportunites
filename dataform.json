@@ -1,0 +1,8 @@
+{
+  "defaultSchema": "dataform",
+  "assertionSchema": "dataform_assertions",
+  "warehouse": "bigquery",
+  "defaultDatabase": "tendances-tech-et-opportunites",
+  "defaultLocation": "EU"
+}
+    
