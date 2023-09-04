@@ -4,4 +4,6 @@ config {
 
 select * from ${ref("posts_questions")}
 
+order by creation_date asc
+
 limit 100;
