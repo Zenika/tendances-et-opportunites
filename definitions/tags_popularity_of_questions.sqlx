@@ -1,3 +1,5 @@
+config { type: "table" }
+
 WITH Sequences AS
   (
     SELECT 
