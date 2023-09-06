@@ -5,7 +5,7 @@ WITH Sequences AS
     SELECT 
     id,
     split(tags, "|") as splitted_tag,
-    FORMAT_DATE('%Y-%m', date(creation_date)) as date
+    PARSE_DATE('%Y-%m-%d', FORMAT_DATE('%Y-%m-01', date(creation_date))) as date
     FROM `bigquery-public-data.stackoverflow.posts_questions` 
   )
 SELECT tag, date, count(*) as count
