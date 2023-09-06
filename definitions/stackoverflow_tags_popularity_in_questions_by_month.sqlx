@@ -4,12 +4,12 @@ WITH Sequences AS
   (
     SELECT 
     id,
-    split(tags, "|") as tag,
+    split(tags, "|") as splitted_tag,
     FORMAT_DATE('%Y-%m', date(creation_date)) as date
     FROM `bigquery-public-data.stackoverflow.posts_questions` 
   )
-SELECT flattened_tags, date, count(*) as count
+SELECT tag, date, count(*) as count
 FROM Sequences
-CROSS JOIN UNNEST(Sequences.tag) AS flattened_tags
-GROUP BY flattened_tags, date
-ORDER BY date DESC, count DESC
+CROSS JOIN UNNEST(Sequences.splitted_tag) AS tag
+GROUP BY tag, date
+ORDER BY date ASC, count DESC
