@@ -1,0 +1,28 @@
+WITH DATA_JOINED AS
+(WITH Sequences_answers AS
+  (
+    SELECT 
+    parent_id,
+    score,
+    PARSE_DATE('%Y-%m-%d', FORMAT_DATE('%Y-%m-01', date(creation_date))) as date,
+    FROM `bigquery-public-data.stackoverflow.posts_answers` 
+  ),
+  Sequence_question AS
+  (select id,
+  tags 
+  FROM `bigquery-public-data.stackoverflow.posts_questions`)
+SELECT split(tags,"|") as splitted_tags,
+date,
+score 
+FROM Sequences_answers a
+left outer join Sequence_question as q
+on a.parent_id = q.id)
+SELECT
+tag,
+date,
+count(*) as count,
+sum(score) AS score_upvote
+FROM  DATA_JOINED
+CROSS JOIN UNNEST(DATA_JOINED.splitted_tags) AS tag
+GROUP BY tag, date
+ORDER BY date ASC, count DESC;
