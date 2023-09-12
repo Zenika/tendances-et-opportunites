@@ -1,3 +1,5 @@
+config { type: "table" }
+
 WITH DATA_JOINED AS
 (WITH Sequences_answers AS
   (
@@ -25,4 +27,4 @@ sum(score) AS score_upvote
 FROM  DATA_JOINED
 CROSS JOIN UNNEST(DATA_JOINED.splitted_tags) AS tag
 GROUP BY tag, date
-ORDER BY date ASC, count DESC;
+ORDER BY date ASC, count DESC
