@@ -1,0 +1,9 @@
+config { 
+    type: "table",
+    description: "A non-used-yet table allow me to understand which tags have no-description and perform some statistics on them"
+}
+
+SELECT tags.tag_name
+FROM ${ref("stackoverflow_tags_with_texts")} as tags
+WHERE tags.excerpt is null
+AND tags.description is null 

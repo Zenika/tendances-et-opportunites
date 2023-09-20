@@ -1,0 +1,6 @@
+config { type: "table" }
+
+SELECT tags.id, tags.tag_name, excerpt.body as excerpt, wiki.body as description
+FROM `bigquery-public-data.stackoverflow.tags` as tags
+JOIN `bigquery-public-data.stackoverflow.posts_tag_wiki_excerpt` as excerpt on tags.excerpt_post_id=excerpt.id
+JOIN `bigquery-public-data.stackoverflow.posts_tag_wiki` as wiki on tags.wiki_post_id=wiki.id
