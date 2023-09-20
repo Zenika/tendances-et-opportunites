@@ -1,0 +1,11 @@
+config {
+    type: "table",
+    description: "Tags with text filtered for easier analaysis. Typically, everything is lower-cased and the - character is removed"
+}
+
+SELECT 
+    tags.id,
+    replace(lower(tags.tag_name), "-", " ") AS tag_name,
+    replace(lower(tags.excerpt), "-", " ") AS excerpt
+FROM ${ref("stackoverflow_tags_with_texts")} AS tags
+WHERE tags.excerpt IS NOT NULL
