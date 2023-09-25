@@ -1,3 +1,5 @@
+config { type: "table" }
+
 WITH DATA AS(
     WITH
       questions AS (
