@@ -1,15 +1,43 @@
-config { type: "table" }
-
-WITH Sequences AS
-  (
-    SELECT 
-    id,
-    split(tags, "|") as splitted_tag,
-    PARSE_DATE('%Y-%m-%d', FORMAT_DATE('%Y-%m-01', date(creation_date))) as date
-    FROM `bigquery-public-data.stackoverflow.posts_questions` 
-  )
-SELECT tag, date, count(*) as count
-FROM Sequences
-CROSS JOIN UNNEST(Sequences.splitted_tag) AS tag
-GROUP BY tag, date
-ORDER BY date ASC, count DESC
+WITH DATA AS(
+    WITH
+      questions AS (
+      SELECT
+        id,
+        SPLIT(tags, "|") AS splitted_tag,
+        score,
+      FROM
+        `bigquery-public-data.stackoverflow.posts_questions` ),
+      votes AS (
+      SELECT
+        post_id,
+        creation_date AS vote_date,
+      FROM
+        `bigquery-public-data.stackoverflow.votes`
+       )
+    SELECT
+      id,
+      splitted_tag,
+      score,
+      vote_date,
+    FROM
+      questions
+    INNER JOIN
+      votes
+    ON
+      votes.post_id = questions.id )
+  SELECT
+    tag,
+    PARSE_DATE('%Y-%m-%d', FORMAT_DATE('%Y-%m-01', DATE(vote_date))) AS votes_date,
+    COUNT(*) AS count,
+    SUM(score) AS upvotes
+  FROM
+    DATA
+  CROSS JOIN
+    UNNEST(data.splitted_tag) AS tag
+  GROUP BY
+    tag,
+    votes_date
+  ORDER BY
+    votes_date DESC,
+    count DESC,
+    upvotes DESC 
