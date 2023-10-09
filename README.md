@@ -10,11 +10,11 @@
 
 > A tool to observe IT tendencies based upon data extracted from various public websites.
 
-### ✨ Useful links
+## ✨ Useful links
 
 * [Public dashboard](https://lookerstudio.google.com/reporting/742da15c-8d95-492c-8b9b-77e82d71d6a9/page/MYsbD/edit)
 
-
+## Architecture
 
 ### How does it works
 
@@ -28,6 +28,23 @@ The following table explains for each website how information is ingested.
 | Stackoverflow | Questions ✅ with popularity 🚧 ([see #8](https://github.com/Zenika/tendances-et-opportunites/issues/8))<br/>Answers [🚧 (see #9](https://github.com/Zenika/tendances-et-opportunites/issues/9))      | Dataform (public dataset) |
 | GitHub      | Projects 🚧 ([see #10](https://github.com/Zenika/tendances-et-opportunites/issues/10))  | Dataform (public dataset) |
 | TechEmpower      | 🚧 ([see #12](https://github.com/Zenika/tendances-et-opportunites/issues/12))  | Cloud Function ➡️ GCS Bucket ➡️ Dataform
+
+As much as posisble, we use Google Cloud Function to inject data into Google Big Query when no source exists.
+
+### Dataform
+Contains the vaious data transformation table
+
+### Google Cloud Function
+Transform data coming from the outer world into Big Query tables.
+Currently deployed functions are
+
+* [extract_framework_categories_from_techempower](functions/extract_framework_categories_from_techempower/README.md)
+
+### Google Secret Manager
+Contains GitHub connection secret
+
+### Looker Studio
+Provides data vizualisation
 
 ## Author
 

@@ -2,3 +2,4 @@ node_modules/
 .classpath
 .project
 .vscode/
+functions/extract_frameworks_categories_from_techempower/frameworks.csv
