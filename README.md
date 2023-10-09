@@ -10,7 +10,27 @@
 
 > Un outil d'observation des tendances de l'IT basé sur des données issues de sites publics (StackOverflow, GitHub, TechEmpower, ...
 
-### ✨ [Demo](TODO)
+### Architecture
+
+Autant que possible, les différentes données sont injectées dans BigQuery par des Google Cloud Function, puis aggrégées grâce à dataform.
+
+Les différents éléments sont
+
+### Dataform
+Contient les différentes tables de transformation des données
+
+### Google Cloud Function
+Transforme les données venues "du monde extérieur" en tables BiGQuery.
+Les fonctions actuellement déployées sont
+
+* [extract_framework_categories_from_techempower](functions/extract_framework_categories_from_techempower/README.md)
+
+### Google Secret Manager
+Contient le token de connexion à GitHub
+
+### Looker Studio
+
+Fournit la visualisation des données
 
 ## Author
 
