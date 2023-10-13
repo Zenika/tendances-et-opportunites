@@ -1,0 +1,85 @@
+config {
+   type : "table"
+   }
+
+WITH TOTAL_QUARTER AS (
+  WITH github_popular_tech_push_202001 AS (
+SELECT
+  name,
+  sum(archive.c)  as nb_push,
+  "202001" as  month 
+FROM (
+  SELECT
+    repo.name AS repo_name,
+    COUNT(*) c
+  FROM
+    githubarchive.month.202001
+  WHERE
+    type IN ( 'PushEvent')
+  GROUP BY
+    repo.name
+  ORDER BY
+    c DESC) AS archive
+INNER JOIN
+  `bigquery-public-data.github_repos.languages` AS LANGUAGES
+ON
+  archive.repo_name = LANGUAGES.repo_name,
+  UNNEST(LANGUAGE)
+  group by name 
+  order by nb_push desc
+  ),
+  github_popular_tech_push_202002 AS (
+SELECT
+  name,
+  sum(archive.c)  as nb_push,
+  "202002" as  month 
+FROM (
+  SELECT
+    repo.name AS repo_name,
+    COUNT(*) c
+  FROM
+    githubarchive.month.202002
+  WHERE
+    type IN ( 'PushEvent')
+  GROUP BY
+    repo.name
+  ORDER BY
+    c DESC) AS archive
+INNER JOIN
+  `bigquery-public-data.github_repos.languages` AS LANGUAGES
+ON
+  archive.repo_name = LANGUAGES.repo_name,
+  UNNEST(LANGUAGE)
+  group by name 
+  order by nb_push desc),
+  github_popular_tech_push_202003 AS (
+SELECT
+  name,
+  sum(archive.c)  as nb_push,
+  "202003" as  month 
+FROM (
+  SELECT
+    repo.name AS repo_name,
+    COUNT(*) c
+  FROM
+    githubarchive.month.202003
+  WHERE
+    type IN ( 'PushEvent')
+  GROUP BY
+    repo.name
+  ORDER BY
+    c DESC) AS archive
+INNER JOIN
+  `bigquery-public-data.github_repos.languages` AS LANGUAGES
+ON
+  archive.repo_name = LANGUAGES.repo_name,
+  UNNEST(LANGUAGE)
+  group by name 
+  order by nb_push desc)
+  select * 
+  from github_popular_tech_push_202001
+  union all (select * from github_popular_tech_push_202002)
+  union all (select * from github_popular_tech_push_202003))
+  select name, sum(nb_push) as total_nb_push from TOTAL_QUARTER
+  group by name
+  order by total_nb_push desc
