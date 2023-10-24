@@ -1,0 +1,74 @@
+config {
+   type : "table"
+   }
+
+with table_st_questions as (with table_data as 
+(select sum(upvotes) as upvotes, CONCAT(EXTRACT(YEAR FROM votes_date) , "/", EXTRACT(QUARTER FROM votes_date))as quarter, tag 
+from `tendances-tech-et-opportunites.dataform.stackoverflow_tags_popularity_in_questions_by_month`
+inner join
+(select distinct (language) from `TechEmpower_frameworks.FRAMEWORKS`)
+on LOWER(language) = LOWER(tag)
+group by quarter, tag
+),
+
+table_score as
+(select sum(upvotes) as total_per_quarter, quarter from table_data group by quarter)
+
+select 
+tag as langauage,
+ceil((upvotes / table_score.total_per_quarter )* 100) AS stackoverflow_popularity_questions,
+table_data.quarter
+from table_data 
+inner join table_score 
+on table_data.quarter=table_score.quarter
+order by quarter DESC, stackoverflow_popularity_questions DESC),
+
+table_st_answers as (
+with table_data as 
+(select sum(total_score) as upvotes, CONCAT(EXTRACT(YEAR FROM vote_date) , "/", EXTRACT(QUARTER FROM vote_date))as quarter, tag 
+from `tendances-tech-et-opportunites.dataform.stackoverflow_popular_answer_tags_with_votes_date`
+inner join
+(select distinct (language) from `TechEmpower_frameworks.FRAMEWORKS`)
+on LOWER(language) = LOWER(tag)
+group by quarter, tag
+),
+table_score as
+(select sum(upvotes) as total_per_quarter, quarter from table_data group by quarter)
+
+select 
+tag as langauage,
+ceil((upvotes / table_score.total_per_quarter )* 100) AS stackoverflow_popularity_answers,
+table_data.quarter
+from table_data 
+inner join table_score 
+on table_data.quarter=table_score.quarter
+order by quarter DESC, stackoverflow_popularity_answers DESC
+),
+table_github as (
+  with table_github as (
+select sum(num_pushers) as num_pushers, language as gt_language, concat(year,"/", quarter) as quarter from `tendances-tech-et-opportunites.dataform.github_innovation_graph_language`
+inner join
+(select distinct (language) as tech_language from `TechEmpower_frameworks.FRAMEWORKS`)
+on LOWER(language) = LOWER(tech_language)
+group by gt_language, year, quarter),
+
+table_score as
+(select sum(num_pushers) as total_per_month, quarter from table_github group by quarter)
+select 
+LOWER(gt_language) as language, 
+CEIL(num_pushers/total_per_month *100) as github_popularity,
+table_score.quarter
+from table_github
+inner join table_score on table_github.quarter=table_score.quarter
+order by quarter desc, github_popularity  desc
+)
+select table_st_answers.langauage, table_st_answers.stackoverflow_popularity_answers, table_st_questions.stackoverflow_popularity_questions,  table_github.github_popularity , table_st_answers.quarter
+from table_st_answers 
+inner join table_st_questions 
+on table_st_answers.langauage = table_st_questions.langauage
+and table_st_answers.quarter = table_st_questions.quarter
+inner join table_github
+on table_st_answers.langauage = table_github.language
+and table_st_answers.quarter = table_github.quarter
+order by quarter DESC, stackoverflow_popularity_answers DESC, stackoverflow_popularity_questions DESC, table_github.github_popularity DESC
+
