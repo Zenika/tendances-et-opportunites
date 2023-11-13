@@ -1,6 +1,6 @@
-# TechEmpower categories extractor
+# CodebaseShow categories extractor
 
-This cloud function simply extracts the various available web frameworks from TechEmpower Frmaeworks GitHub repository.
+This cloud function simply extracts the various available web frameworks from CodebaseShow associated repositories.
 
 Triggered by a Google Cron, it writes a Big Query table mapping the languages/frameworks onto Stackoverflow associated tags.
 
@@ -25,7 +25,7 @@ Triggered by a Google Cron, it writes a Big Query table mapping the languages/fr
 ### Deploy function code
 (borrowed from [Deploy a function](https://cloud.google.com/functions/docs/create-deploy-gcloud))
 ```
-gcloud functions deploy extract-framework-categories-from-techempower --gen2 --runtime=python311 --region=us-west1 --source=. --entry-point=http_function --trigger-http --allow-unauthenticated
+gcloud functions deploy extract-framework-categories-from-codebase-show --gen2 --runtime=python311 --region=us-west1 --source=. --entry-point=http_function --trigger-http --allow-unauthenticated
 ```
 
 ## How to run locally

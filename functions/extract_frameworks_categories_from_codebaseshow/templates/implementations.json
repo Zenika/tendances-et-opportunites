@@ -1,0 +1,46 @@
+{
+    "components": [
+        {
+            "__component": "typeof User",
+            "token": {
+                "__undefined": true
+            }
+        }
+    ],
+    "query": {
+        "<=": {
+            "__component": "typeof Implementation"
+        },
+        "find=>": {
+            "()": [
+                {
+                    "category": "{{ category }}",
+                    "isPubliclyListed": true,
+                    "project": {
+                        "id": "{{ id }}"
+                    }
+                },
+                {
+                    "repositoryStatus": true,
+                    "repositoryURL": true,
+                    "frontendEnvironment": true,
+                    "language": true,
+                    "category": true,
+                    "libraries": true
+                },
+                {
+                    "limit": {
+                        "__undefined": true
+                    },
+                    "skip": {
+                        "__undefined": true
+                    },
+                    "sort": {
+                        "language": "asc",
+                        "librariesSortKey": "asc"
+                    }
+                }
+            ]
+        }
+    }
+}

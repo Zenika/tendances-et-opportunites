@@ -3,3 +3,5 @@ node_modules/
 .project
 .vscode/
 functions/extract_frameworks_categories_from_techempower/frameworks.csv
+functions/extract_frameworks_categories_from_codebaseshow/frameworks.csv
+functions/extract_frameworks_categories_from_codebaseshow/__pycache__/main.cpython-312.pyc

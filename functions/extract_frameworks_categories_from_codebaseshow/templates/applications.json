@@ -1,0 +1,48 @@
+{
+    "components": [
+        {
+            "__component": "typeof User",
+            "token": {
+                "__undefined": true
+            }
+        }
+    ],
+    "query": {
+        "<=": {
+            "__component": "typeof Project"
+        },
+        "find=>": {
+            "()": [
+                {
+                    "status": {
+                        "$in": [
+                            "unmaintained",
+                            "available",
+                            "coming-soon"
+                        ]
+                    }
+                },
+                {
+		"categories": true,
+		"description": true,
+		"logo": true,
+		"name": true,
+		"numberOfImplementations": true,
+		"slug": true,
+		"status": true
+                },
+                {
+                    "limit": {
+                        "__undefined": true
+                    },
+                    "skip": {
+                        "__undefined": true
+                    },
+                    "sort": {
+                        "numberOfImplementations": "desc"
+                    }
+                }
+            ]
+        }
+    }
+}

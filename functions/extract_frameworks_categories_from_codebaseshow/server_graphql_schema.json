@@ -1,0 +1,1010 @@
+
+{
+    "result": {
+      "component": {
+        "name": "Application",
+        "properties": [
+          {
+            "name": "runHourlyTask",
+            "type": "Method",
+            "exposure": {
+              "call": true
+            }
+          },
+          {
+            "name": "runDailyTask",
+            "type": "Method",
+            "exposure": {
+              "call": true
+            }
+          }
+        ],
+        "providedComponents": [
+          {
+            "name": "User",
+            "mixins": [
+              "Storable"
+            ],
+            "properties": [
+              {
+                "name": "get",
+                "type": "Method",
+                "exposure": {
+                  "call": true
+                }
+              },
+              {
+                "name": "token",
+                "type": "StorableAttribute",
+                "exposure": {
+                  "get": true,
+                  "set": true
+                },
+                "value": {
+                  "__undefined": true
+                },
+                "valueType": "string?"
+              },
+              {
+                "name": "getAuthenticatedUser",
+                "type": "StorableMethod",
+                "exposure": {
+                  "call": true
+                }
+              },
+              {
+                "name": "signIn",
+                "type": "StorableMethod",
+                "exposure": {
+                  "call": true
+                }
+              }
+            ],
+            "prototype": {
+              "properties": [
+                {
+                  "name": "load",
+                  "type": "Method",
+                  "exposure": {
+                    "call": true
+                  }
+                },
+                {
+                  "name": "save",
+                  "type": "Method",
+                  "exposure": {
+                    "call": true
+                  }
+                },
+                {
+                  "name": "id",
+                  "type": "StorablePrimaryIdentifierAttribute",
+                  "exposure": {
+                    "get": true,
+                    "set": true
+                  },
+                  "default": {
+                    "__function": "function(){return this.constructor.generateId()}"
+                  },
+                  "valueType": "string"
+                },
+                {
+                  "name": "createdAt",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "Date"
+                },
+                {
+                  "name": "username",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "string"
+                },
+                {
+                  "name": "avatarURL",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "string"
+                },
+                {
+                  "name": "isAdmin",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true,
+                    "set": true
+                  },
+                  "default": {
+                    "__function": "function () {\nreturn !1\n}"
+                  },
+                  "valueType": "boolean"
+                }
+              ]
+            },
+            "consumedComponents": [
+              "User"
+            ]
+          },
+          {
+            "name": "Project",
+            "mixins": [
+              "Storable"
+            ],
+            "properties": [
+              {
+                "name": "get",
+                "type": "Method",
+                "exposure": {
+                  "call": true
+                }
+              },
+              {
+                "name": "find",
+                "type": "Method",
+                "exposure": {
+                  "call": true
+                }
+              }
+            ],
+            "prototype": {
+              "properties": [
+                {
+                  "name": "load",
+                  "type": "Method",
+                  "exposure": {
+                    "call": true
+                  }
+                },
+                {
+                  "name": "id",
+                  "type": "StorablePrimaryIdentifierAttribute",
+                  "exposure": {
+                    "get": true,
+                    "set": true
+                  },
+                  "default": {
+                    "__function": "function(){return this.constructor.generateId()}"
+                  },
+                  "valueType": "string"
+                },
+                {
+                  "name": "createdAt",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "Date"
+                },
+                {
+                  "name": "owner",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true,
+                    "set": true
+                  },
+                  "valueType": "User"
+                },
+                {
+                  "name": "slug",
+                  "type": "StorableSecondaryIdentifierAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "string",
+                  "validators": [
+                    {
+                      "__validator": {
+                        "name": "rangeLength",
+                        "function": {
+                          "__function": "(t,[e,r])=>t!==void 0&&t.length>=e&&t.length<=r"
+                        },
+                        "arguments": [
+                          [
+                            1,
+                            64
+                          ]
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "name",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "string",
+                  "validators": [
+                    {
+                      "__validator": {
+                        "name": "rangeLength",
+                        "function": {
+                          "__function": "(t,[e,r])=>t!==void 0&&t.length>=e&&t.length<=r"
+                        },
+                        "arguments": [
+                          [
+                            1,
+                            64
+                          ]
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "description",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "string",
+                  "validators": [
+                    {
+                      "__validator": {
+                        "name": "rangeLength",
+                        "function": {
+                          "__function": "(t,[e,r])=>t!==void 0&&t.length>=e&&t.length<=r"
+                        },
+                        "arguments": [
+                          [
+                            1,
+                            64
+                          ]
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "headline",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "string",
+                  "validators": [
+                    {
+                      "__validator": {
+                        "name": "rangeLength",
+                        "function": {
+                          "__function": "(t,[e,r])=>t!==void 0&&t.length>=e&&t.length<=r"
+                        },
+                        "arguments": [
+                          [
+                            1,
+                            64
+                          ]
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "subheading",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "string",
+                  "validators": [
+                    {
+                      "__validator": {
+                        "name": "rangeLength",
+                        "function": {
+                          "__function": "(t,[e,r])=>t!==void 0&&t.length>=e&&t.length<=r"
+                        },
+                        "arguments": [
+                          [
+                            1,
+                            256
+                          ]
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "logo",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "object"
+                },
+                {
+                  "name": "screenshot",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "object"
+                },
+                {
+                  "name": "websiteURL",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "string",
+                  "validators": [
+                    {
+                      "__validator": {
+                        "name": "rangeLength",
+                        "function": {
+                          "__function": "(t,[e,r])=>t!==void 0&&t.length>=e&&t.length<=r"
+                        },
+                        "arguments": [
+                          [
+                            1,
+                            256
+                          ]
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "createURL",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "string",
+                  "validators": [
+                    {
+                      "__validator": {
+                        "name": "rangeLength",
+                        "function": {
+                          "__function": "(t,[e,r])=>t!==void 0&&t.length>=e&&t.length<=r"
+                        },
+                        "arguments": [
+                          [
+                            1,
+                            256
+                          ]
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "demoURL",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "string",
+                  "validators": [
+                    {
+                      "__validator": {
+                        "name": "rangeLength",
+                        "function": {
+                          "__function": "(t,[e,r])=>t!==void 0&&t.length>=e&&t.length<=r"
+                        },
+                        "arguments": [
+                          [
+                            1,
+                            256
+                          ]
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "repositoryURL",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "string",
+                  "validators": [
+                    {
+                      "__validator": {
+                        "name": "rangeLength",
+                        "function": {
+                          "__function": "(t,[e,r])=>t!==void 0&&t.length>=e&&t.length<=r"
+                        },
+                        "arguments": [
+                          [
+                            1,
+                            256
+                          ]
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "categories",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "string[]",
+                  "items": {
+                    "validators": [
+                      {
+                        "__validator": {
+                          "name": "anyOf",
+                          "function": {
+                            "__function": "(t,e)=>e.includes(t)"
+                          },
+                          "arguments": [
+                            [
+                              "frontend",
+                              "backend",
+                              "fullstack"
+                            ]
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "status",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "string",
+                  "validators": [
+                    {
+                      "__validator": {
+                        "name": "anyOf",
+                        "function": {
+                          "__function": "(t,e)=>e.includes(t)"
+                        },
+                        "arguments": [
+                          [
+                            "available",
+                            "coming-soon"
+                          ]
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "numberOfImplementations",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "number",
+                  "validators": [
+                    {
+                      "__validator": {
+                        "name": "integer",
+                        "function": {
+                          "__function": "t=>t!==void 0&&Number.isInteger(t)"
+                        }
+                      }
+                    },
+                    {
+                      "__validator": {
+                        "name": "positive",
+                        "function": {
+                          "__function": "t=>t!==void 0&&t>=0"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "findSubmissionsToReview",
+                  "type": "Method",
+                  "exposure": {
+                    "call": true
+                  }
+                }
+              ]
+            },
+            "consumedComponents": [
+              "User",
+              "Implementation"
+            ]
+          },
+          {
+            "name": "Implementation",
+            "mixins": [
+              "Storable"
+            ],
+            "properties": [
+              {
+                "name": "get",
+                "type": "Method",
+                "exposure": {
+                  "call": true
+                }
+              },
+              {
+                "name": "find",
+                "type": "Method",
+                "exposure": {
+                  "call": true
+                }
+              },
+              {
+                "name": "approveUnmaintainedReport",
+                "type": "StorableMethod",
+                "exposure": {
+                  "call": true
+                }
+              },
+              {
+                "name": "findUsedLibraries",
+                "type": "StorableMethod",
+                "exposure": {
+                  "call": true
+                }
+              }
+            ],
+            "prototype": {
+              "properties": [
+                {
+                  "name": "load",
+                  "type": "Method",
+                  "exposure": {
+                    "call": true
+                  }
+                },
+                {
+                  "name": "save",
+                  "type": "Method",
+                  "exposure": {
+                    "call": true
+                  }
+                },
+                {
+                  "name": "delete",
+                  "type": "Method",
+                  "exposure": {
+                    "call": true
+                  }
+                },
+                {
+                  "name": "id",
+                  "type": "StorablePrimaryIdentifierAttribute",
+                  "exposure": {
+                    "get": true,
+                    "set": true
+                  },
+                  "default": {
+                    "__function": "function(){return this.constructor.generateId()}"
+                  },
+                  "valueType": "string"
+                },
+                {
+                  "name": "createdAt",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "Date"
+                },
+                {
+                  "name": "owner",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true,
+                    "set": true
+                  },
+                  "valueType": "User"
+                },
+                {
+                  "name": "project",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true,
+                    "set": true
+                  },
+                  "valueType": "Project"
+                },
+                {
+                  "name": "repositoryURL",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true,
+                    "set": true
+                  },
+                  "valueType": "string",
+                  "validators": [
+                    {
+                      "__validator": {
+                        "name": "maxLength",
+                        "function": {
+                          "__function": "(t,e)=>t!==void 0&&t.length<=e"
+                        },
+                        "arguments": [
+                          500
+                        ]
+                      }
+                    },
+                    {
+                      "__validator": {
+                        "name": "match",
+                        "function": {
+                          "__function": "(t,e)=>t!==void 0&&e.test(t)"
+                        },
+                        "arguments": [
+                          {
+                            "__regExp": "/^https\\:\\/\\/github\\.com\\//"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "repositoryStatus",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "string",
+                  "validators": [
+                    {
+                      "__validator": {
+                        "name": "anyOf",
+                        "function": {
+                          "__function": "(t,e)=>e.includes(t)"
+                        },
+                        "arguments": [
+                          [
+                            "available",
+                            "archived",
+                            "issues-disabled",
+                            "missing"
+                          ]
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "category",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true,
+                    "set": true
+                  },
+                  "valueType": "string",
+                  "validators": [
+                    {
+                      "__validator": {
+                        "name": "anyOf",
+                        "function": {
+                          "__function": "(t,e)=>e.includes(t)"
+                        },
+                        "arguments": [
+                          [
+                            "frontend",
+                            "backend",
+                            "fullstack"
+                          ]
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "frontendEnvironment",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true,
+                    "set": true
+                  },
+                  "valueType": "string?",
+                  "validators": [
+                    {
+                      "__validator": {
+                        "name": "optional",
+                        "function": {
+                          "__function": "(t,e)=>(Array.isArray(e)||(e=[e]),t===void 0||e.every(r=>r.run(t)))"
+                        },
+                        "arguments": [
+                          {
+                            "__validator": {
+                              "name": "anyOf",
+                              "function": {
+                                "__function": "(t,e)=>e.includes(t)"
+                              },
+                              "arguments": [
+                                [
+                                  "web",
+                                  "mobile",
+                                  "desktop"
+                                ]
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "language",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true,
+                    "set": true
+                  },
+                  "valueType": "string",
+                  "validators": [
+                    {
+                      "__validator": {
+                        "name": "rangeLength",
+                        "function": {
+                          "__function": "(t,[e,r])=>t!==void 0&&t.length>=e&&t.length<=r"
+                        },
+                        "arguments": [
+                          [
+                            1,
+                            100
+                          ]
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "libraries",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true,
+                    "set": true
+                  },
+                  "valueType": "string[]",
+                  "validators": [
+                    {
+                      "__validator": {
+                        "name": "rangeLength",
+                        "function": {
+                          "__function": "(t,[e,r])=>t!==void 0&&t.length>=e&&t.length<=r"
+                        },
+                        "arguments": [
+                          [
+                            1,
+                            5
+                          ]
+                        ],
+                        "message": "You must specify at least one library or framework."
+                      }
+                    }
+                  ],
+                  "items": {
+                    "validators": [
+                      {
+                        "__validator": {
+                          "name": "rangeLength",
+                          "function": {
+                            "__function": "(t,[e,r])=>t!==void 0&&t.length>=e&&t.length<=r"
+                          },
+                          "arguments": [
+                            [
+                              1,
+                              50
+                            ]
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "librariesSortKey",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "string"
+                },
+                {
+                  "name": "status",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "string",
+                  "validators": [
+                    {
+                      "__validator": {
+                        "name": "anyOf",
+                        "function": {
+                          "__function": "(t,e)=>e.includes(t)"
+                        },
+                        "arguments": [
+                          [
+                            "pending",
+                            "reviewing",
+                            "approved",
+                            "rejected"
+                          ]
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "reviewer",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "User?"
+                },
+                {
+                  "name": "numberOfPendingIssues",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "number?",
+                  "validators": [
+                    {
+                      "__validator": {
+                        "name": "optional",
+                        "function": {
+                          "__function": "(t,e)=>(Array.isArray(e)||(e=[e]),t===void 0||e.every(r=>r.run(t)))"
+                        },
+                        "arguments": [
+                          [
+                            {
+                              "__validator": {
+                                "name": "integer",
+                                "function": {
+                                  "__function": "t=>t!==void 0&&Number.isInteger(t)"
+                                }
+                              }
+                            },
+                            {
+                              "__validator": {
+                                "name": "positive",
+                                "function": {
+                                  "__function": "t=>t!==void 0&&t>=0"
+                                }
+                              }
+                            }
+                          ]
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "unmaintainedIssueNumber",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "number?",
+                  "validators": [
+                    {
+                      "__validator": {
+                        "name": "optional",
+                        "function": {
+                          "__function": "(t,e)=>(Array.isArray(e)||(e=[e]),t===void 0||e.every(r=>r.run(t)))"
+                        },
+                        "arguments": [
+                          [
+                            {
+                              "__validator": {
+                                "name": "integer",
+                                "function": {
+                                  "__function": "t=>t!==void 0&&Number.isInteger(t)"
+                                }
+                              }
+                            },
+                            {
+                              "__validator": {
+                                "name": "positive",
+                                "function": {
+                                  "__function": "t=>t!==void 0&&t>=0"
+                                }
+                              }
+                            }
+                          ]
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "name": "markedAsUnmaintainedOn",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "Date?"
+                },
+                {
+                  "name": "isPubliclyListed",
+                  "type": "StorableAttribute",
+                  "exposure": {
+                    "get": true
+                  },
+                  "valueType": "boolean"
+                },
+                {
+                  "name": "submit",
+                  "type": "StorableMethod",
+                  "exposure": {
+                    "call": true
+                  }
+                },
+                {
+                  "name": "add",
+                  "type": "StorableMethod",
+                  "exposure": {
+                    "call": true
+                  }
+                },
+                {
+                  "name": "reviewSubmission",
+                  "type": "StorableMethod",
+                  "exposure": {
+                    "call": true
+                  }
+                },
+                {
+                  "name": "approveSubmission",
+                  "type": "StorableMethod",
+                  "exposure": {
+                    "call": true
+                  }
+                },
+                {
+                  "name": "rejectSubmission",
+                  "type": "StorableMethod",
+                  "exposure": {
+                    "call": true
+                  }
+                },
+                {
+                  "name": "cancelSubmissionReview",
+                  "type": "StorableMethod",
+                  "exposure": {
+                    "call": true
+                  }
+                },
+                {
+                  "name": "reportAsUnmaintained",
+                  "type": "StorableMethod",
+                  "exposure": {
+                    "call": true
+                  }
+                },
+                {
+                  "name": "markAsUnmaintained",
+                  "type": "StorableMethod",
+                  "exposure": {
+                    "call": true
+                  }
+                },
+                {
+                  "name": "claimOwnership",
+                  "type": "StorableMethod",
+                  "exposure": {
+                    "call": true
+                  }
+                }
+              ]
+            },
+            "consumedComponents": [
+              "User",
+              "Project"
+            ]
+          }
+        ]
+      }
+    }
+  }

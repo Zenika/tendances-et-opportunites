@@ -1,0 +1,6 @@
+functions-framework==3.*
+google-cloud-secret-manager==2.10.*
+google-cloud-bigquery==3.12.*
+six==1.16
+requests==2.31.*
+jinja2==3.1.*

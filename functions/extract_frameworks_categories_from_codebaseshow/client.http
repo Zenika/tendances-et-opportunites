@@ -1,0 +1,149 @@
+GET http://localhost:8080
+
+###
+# Get all existing applications
+###
+POST https://backend.codebase.show/
+Content-Type: application/json
+
+{
+    "components": [
+        {
+            "__component": "typeof User",
+            "token": {
+                "__undefined": true
+            }
+        }
+    ],
+    "query": {
+        "<=": {
+            "__component": "typeof Project"
+        },
+        "find=>": {
+            "()": [
+                {
+                    "status": {
+                        "$in": [
+                            "unmaintained",
+                            "available",
+                            "coming-soon"
+                        ]
+                    }
+                },
+                {
+		"categories": true,
+		"description": true,
+		"logo": true,
+		"name": true,
+		"numberOfImplementations": true,
+		"slug": true,
+		"status": true
+                },
+                {
+                    "limit": {
+                        "__undefined": true
+                    },
+                    "skip": {
+                        "__undefined": true
+                    },
+                    "sort": {
+                        "numberOfImplementations": "desc"
+                    }
+                }
+            ]
+        }
+    }
+}
+
+###
+# Get the realworld application decsription
+###
+POST https://backend.codebase.show/
+Content-Type: application/json
+
+{
+    "components": [
+        {
+            "__component": "typeof User",
+            "token": {
+                "__undefined": true
+            }
+        }
+    ],
+    "query": {
+        "<=": {
+            "__component": "typeof Project"
+        },
+        "get=>": {
+            "()": [
+                {
+                    "slug": "realworld"
+                },
+                {
+                    "categories": true,
+                    "createURL": true,
+                    "demoURL": true,
+                    "headline": true,
+                    "id": true,
+                    "logo": true,
+                    "name": true,
+                    "repositoryURL": true,
+                    "screenshot": true,
+                    "subheading": true,
+                    "websiteURL": true
+                },
+                {
+                    "reload": false,
+                    "throwIfMissing": true
+                }
+            ]
+        }
+    }
+}
+
+
+###
+# Get all frontend implementations *ids* of the realworrld application
+###
+POST https://backend.codebase.show/
+Content-Type: application/json
+
+{
+    "components": [
+        {
+            "__component": "typeof User",
+            "token": {
+                "__undefined": true
+            }
+        }
+    ],
+    "query": {
+        "<=": {
+            "__component": "typeof Implementation"
+        },
+        "find=>": {
+            "()": [
+                {
+                    "category": "frontend",
+                    "isPubliclyListed": true,
+                    "project": {
+                        "id": "ckl2zgmut0000zrliha42alz6"
+                    }
+                },
+{"project":{"id":true},"repositoryURL":true,"frontendEnvironment":true,"language":true,"libraries":true},
+                {
+                    "limit": {
+                        "__undefined": true
+                    },
+                    "skip": {
+                        "__undefined": true
+                    },
+                    "sort": {
+                        "language": "asc",
+                        "librariesSortKey": "asc"
+                    }
+                }
+            ]
+        }
+    }
+}
