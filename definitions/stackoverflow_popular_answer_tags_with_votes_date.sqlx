@@ -1,0 +1,67 @@
+config {
+   type : "table"
+   }
+
+WITH
+  FINAL_DATA_WITH_DATE_VOTES AS (
+  WITH
+    DF AS (
+    WITH DATA_JOINED AS (
+      WITH
+        Sequences_answers AS (
+        SELECT
+          id,
+          parent_id,
+          score,
+          PARSE_DATE('%Y-%m-%d', FORMAT_DATE('%Y-%m-01', DATE(creation_date))) AS date,
+        FROM
+          `bigquery-public-data.stackoverflow.posts_answers` ),
+        Sequence_question AS (
+        SELECT
+          id,
+          tags
+        FROM
+          `bigquery-public-data.stackoverflow.posts_questions`)
+      SELECT
+        a.id AS answer_id,
+        SPLIT(tags,"|") AS splitted_tags,
+        date,
+        score
+      FROM
+        Sequences_answers a
+      LEFT OUTER JOIN
+        Sequence_question AS q
+      ON
+        a.parent_id = q.id)
+    SELECT
+      answer_id,
+      tag,
+      date,
+      score AS score_upvote
+    FROM
+      DATA_JOINED
+    CROSS JOIN
+      UNNEST(DATA_JOINED.splitted_tags) AS tag)
+  SELECT
+    *
+  FROM
+    DF
+  LEFT OUTER JOIN
+    `bigquery-public-data.stackoverflow.votes` AS votes
+  ON
+    DF.answer_id = votes.post_id
+  WHERE
+    votes.vote_type_id=2)
+SELECT
+  tag,
+  PARSE_DATE('%Y-%m-%d', FORMAT_DATE('%Y-%m-01', DATE(creation_date))) AS vote_date,
+  SUM(score_upvote) total_score,
+  COUNT(*) AS nb_answers
+FROM
+  FINAL_DATA_WITH_DATE_VOTES
+GROUP BY
+  tag,
+  vote_date
+ORDER BY
+  vote_date DESC,
+  nb_answers

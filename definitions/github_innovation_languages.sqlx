@@ -1,0 +1,23 @@
+config {
+   type : "table"
+   }
+
+WITH GITHUB_LANGUAGES AS (
+SELECT
+    LANGUAGE,
+    year,
+    CONCAT(year,"/",quarter) AS period,
+    SUM(num_pushers) AS sum_num_pushers
+  FROM
+    `tendances-tech-et-opportunites.dataform.github_innovation_graph_language`
+  GROUP BY
+    LANGUAGE,
+    year,
+    period
+  ORDER BY
+    period DESC,
+    sum_num_pushers DESC
+)
+SELECT 
+  * from GITHUB_LANGUAGES
+

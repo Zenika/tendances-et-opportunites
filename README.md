@@ -8,29 +8,43 @@
   </a>
 </p>
 
-> Un outil d'observation des tendances de l'IT basé sur des données issues de sites publics (StackOverflow, GitHub, TechEmpower, ...
+> A tool to observe IT tendencies based upon data extracted from various public websites.
 
-### Architecture
+## ✨ Useful links
 
-Autant que possible, les différentes données sont injectées dans BigQuery par des Google Cloud Function, puis aggrégées grâce à dataform.
+* [Public dashboard](https://lookerstudio.google.com/reporting/742da15c-8d95-492c-8b9b-77e82d71d6a9/page/MYsbD/edit)
 
-Les différents éléments sont
+## Architecture
+
+### How does it works
+
+A Google BigQuery project contains some Dataform processes which extract data from the public datasets of the given websites.
+When no public dataset exists, dataform will invoke remote cloud functions which will fetch dta from the web, push it into Google Cloud Storage Buckets, which are in turn ingested into dataform. 
+
+The following table explains for each website how information is ingested.
+
+| Website         | Informations processed<br/>💡 when envisonned, 🚧 when being worked on (an issue is associated), ✅ when ok | Processing method |
+|--------------|-----------|-|
+| Stackoverflow | Questions ✅ with popularity 🚧 ([see #8](https://github.com/Zenika/tendances-et-opportunites/issues/8))<br/>Answers [🚧 (see #9](https://github.com/Zenika/tendances-et-opportunites/issues/9))      | Dataform (public dataset) |
+| GitHub      | Projects 🚧 ([see #10](https://github.com/Zenika/tendances-et-opportunites/issues/10))  | Dataform (public dataset) |
+| TechEmpower      | 🚧 ([see #12](https://github.com/Zenika/tendances-et-opportunites/issues/12))  | Cloud Function ➡️ GCS Bucket ➡️ Dataform
+
+As much as posisble, we use Google Cloud Function to inject data into Google Big Query when no source exists.
 
 ### Dataform
-Contient les différentes tables de transformation des données
+Contains the vaious data transformation table
 
 ### Google Cloud Function
-Transforme les données venues "du monde extérieur" en tables BiGQuery.
-Les fonctions actuellement déployées sont
+Transform data coming from the outer world into Big Query tables.
+Currently deployed functions are
 
 * [extract_framework_categories_from_techempower](functions/extract_framework_categories_from_techempower/README.md)
 
 ### Google Secret Manager
-Contient le token de connexion à GitHub
+Contains GitHub connection secret
 
 ### Looker Studio
-
-Fournit la visualisation des données
+Provides data vizualisation
 
 ## Author
 
