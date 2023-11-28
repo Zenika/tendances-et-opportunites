@@ -1,0 +1,17 @@
+config {
+   type : "table"
+   }
+
+with tableAll as (
+  with tableunion as(SELECT language, framework from `tendances-tech-et-opportunites.TechEmpower_frameworks.FRAMEWORKS` as temf 
+union ALL
+select language, framework from `tendances-tech-et-opportunites.Codebaseshow_frameworks.FRAMEWORKS`as cbf)
+select tableunion.language as l, tableunion.framework as f, * from tableunion
+full join 
+`tendances-tech-et-opportunites.TechEmpower_frameworks.FRAMEWORKS` as temf 
+on LOWER(tableunion.framework) = LOWER(temf.framework)
+and tableunion.language = temf.language
+full join `tendances-tech-et-opportunites.Codebaseshow_frameworks.FRAMEWORKS` as cbf
+on LOWER(tableunion.language) = LOWER(cbf.language)
+ where cbf.domain ="frontend" or cbf.domain ="backend")
+select distinct l as language, f as framework, domain from tableAll 
