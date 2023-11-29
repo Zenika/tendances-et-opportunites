@@ -9,18 +9,12 @@ inner join
 (select distinct (language) from `TechEmpower_frameworks.FRAMEWORKS`)
 on LOWER(language) = LOWER(tag)
 group by quarter, tag
-),
-
-table_score as
-(select sum(upvotes) as total_per_quarter, quarter from table_data group by quarter)
-
+)
 select 
 tag as langauage,
-ceil((upvotes / table_score.total_per_quarter )* 100) AS stackoverflow_popularity_questions,
+upvotes AS stackoverflow_popularity_questions,
 table_data.quarter
 from table_data 
-inner join table_score 
-on table_data.quarter=table_score.quarter
 order by quarter DESC, stackoverflow_popularity_questions DESC),
 
 table_st_answers as (
@@ -31,17 +25,12 @@ inner join
 (select distinct (language) from `TechEmpower_frameworks.FRAMEWORKS`)
 on LOWER(language) = LOWER(tag)
 group by quarter, tag
-),
-table_score as
-(select sum(upvotes) as total_per_quarter, quarter from table_data group by quarter)
-
+)
 select 
 tag as langauage,
-ceil((upvotes / table_score.total_per_quarter )* 100) AS stackoverflow_popularity_answers,
+upvotes  AS stackoverflow_popularity_answers,
 table_data.quarter
 from table_data 
-inner join table_score 
-on table_data.quarter=table_score.quarter
 order by quarter DESC, stackoverflow_popularity_answers DESC
 ),
 table_github as (
@@ -50,25 +39,21 @@ select sum(num_pushers) as num_pushers, language as gt_language, concat(year,"/"
 inner join
 (select distinct (language) as tech_language from `TechEmpower_frameworks.FRAMEWORKS`)
 on LOWER(language) = LOWER(tech_language)
-group by gt_language, year, quarter),
-
-table_score as
-(select sum(num_pushers) as total_per_month, quarter from table_github group by quarter)
+group by gt_language, year, quarter)
 select 
 LOWER(gt_language) as language, 
-CEIL(num_pushers/total_per_month *100) as github_popularity,
-table_score.quarter
+num_pushers as github_popularity,
+table_github.quarter
 from table_github
-inner join table_score on table_github.quarter=table_score.quarter
 order by quarter desc, github_popularity  desc
 )
 select table_st_answers.langauage, table_st_answers.stackoverflow_popularity_answers, table_st_questions.stackoverflow_popularity_questions,  table_github.github_popularity , table_st_answers.quarter
 from table_st_answers 
-inner join table_st_questions 
+full join table_st_questions 
 on table_st_answers.langauage = table_st_questions.langauage
 and table_st_answers.quarter = table_st_questions.quarter
-inner join table_github
+full join table_github
 on table_st_answers.langauage = table_github.language
 and table_st_answers.quarter = table_github.quarter
+where table_st_answers.quarter is not null
 order by quarter DESC, stackoverflow_popularity_answers DESC, stackoverflow_popularity_questions DESC, table_github.github_popularity DESC
-
