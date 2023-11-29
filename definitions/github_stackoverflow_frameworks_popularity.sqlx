@@ -1,0 +1,69 @@
+config {
+   type : "table"
+   }
+with table_top5 as (with table_st_questions as (with table_data as 
+(select sum(upvotes) as upvotes, CONCAT(EXTRACT(YEAR FROM votes_date) , "/", EXTRACT(QUARTER FROM votes_date))as quarter, tag,ANY_VALUE(associated_language) as associated_language
+from `tendances-tech-et-opportunites.dataform.stackoverflow_tags_popularity_in_questions_by_month`
+inner join
+(select distinct (framework),language as associated_language from `tendances-tech-et-opportunites.TechEmpower_frameworks.FRAMEWORKS`)
+on LOWER(framework) = LOWER(tag)
+group by quarter, tag 
+)
+select 
+associated_language,
+tag as langauage,
+upvotes AS stackoverflow_popularity_questions,
+table_data.quarter
+from table_data 
+order by quarter DESC, stackoverflow_popularity_questions DESC),
+
+table_st_answers as (
+with table_data as 
+(select sum(total_score) as upvotes, CONCAT(EXTRACT(YEAR FROM vote_date) , "/", EXTRACT(QUARTER FROM vote_date))as quarter, tag ,  ANY_VALUE(associated_language) as associated_language
+from `tendances-tech-et-opportunites.dataform.stackoverflow_popular_answer_tags_with_votes_date`
+inner join
+(select distinct (framework),language as associated_language from `tendances-tech-et-opportunites.TechEmpower_frameworks.FRAMEWORKS`)
+on LOWER(framework) = LOWER(tag)
+group by quarter, tag
+)
+select 
+associated_language,
+tag as langauage,
+upvotes AS stackoverflow_popularity_answers,
+table_data.quarter
+from table_data 
+order by quarter DESC, stackoverflow_popularity_answers DESC
+),
+table_github as (
+  with table_github as (
+select sum(num_pushers) as num_pushers, language as gt_language, concat(year,"/", quarter) as quarter,  ANY_VALUE(associated_language) as associated_language,  from `tendances-tech-et-opportunites.dataform.github_innovation_graph_language`
+inner join
+(select distinct (framework) as tech_language, language as associated_language from `tendances-tech-et-opportunites.TechEmpower_frameworks.FRAMEWORKS`)
+on  LOWER(tech_language) = LOWER(language)
+group by gt_language, year, quarter)
+select 
+LOWER(gt_language) as language, 
+num_pushers as github_popularity,
+table_github.quarter
+from table_github
+order by quarter desc, github_popularity  desc
+)
+select table_st_answers.associated_language, table_st_answers.langauage as Framework, table_st_answers.stackoverflow_popularity_answers, table_st_questions.stackoverflow_popularity_questions,  table_github.github_popularity , table_st_answers.quarter
+from table_st_answers 
+inner join table_st_questions 
+on table_st_answers.langauage = table_st_questions.langauage
+and table_st_answers.quarter = table_st_questions.quarter
+full join table_github
+on table_st_answers.langauage = table_github.language
+and table_st_answers.quarter = table_github.quarter
+where table_st_answers.quarter is not null
+order by quarter DESC, stackoverflow_popularity_answers DESC, stackoverflow_popularity_questions DESC, table_github.github_popularity DESC)
+select * 
+from (
+  select associated_language, Framework, stackoverflow_popularity_answers, stackoverflow_popularity_questions, github_popularity, quarter,
+  ROW_NUMBER() OVER (PARTITION BY associated_language,quarter ORDER BY  stackoverflow_popularity_answers DESC) AS rank
+   from table_top5) as ranked
+where rank <= 5
+order by quarter desc,associated_language,stackoverflow_popularity_answers desc
+
+
