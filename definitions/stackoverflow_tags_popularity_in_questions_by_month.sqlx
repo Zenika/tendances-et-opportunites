@@ -31,7 +31,8 @@ WITH DATA AS(
     tag,
     PARSE_DATE('%Y-%m-%d', FORMAT_DATE('%Y-%m-01', DATE(vote_date))) AS votes_date,
     COUNT(*) AS count,
-    SUM(score) AS upvotes
+    SUM(score) AS upvotes,
+    70 as percentage
   FROM
     DATA
   CROSS JOIN
