@@ -33,7 +33,7 @@ select
   upvotes_per_tag_per_month.month, 
   tag, 
   upvotes_this_month, 
-  upvotes_this_month / upvotes_for_all_tags AS share_of_all_upvotes
+  upvotes_this_month / upvotes_for_all_tags AS share_among_all_upvotes
 from upvotes_per_tag_per_month
 inner join total_upvote_per_month on upvotes_per_tag_per_month.month = total_upvote_per_month.month
 order by 
