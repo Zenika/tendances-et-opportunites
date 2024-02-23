@@ -1,46 +1,41 @@
 config { type: "table" }
 
-WITH DATA AS(
-    WITH
-      questions AS (
-      SELECT
-        id,
-        SPLIT(tags, "|") AS splitted_tag,
-        score,
-      FROM
-        `bigquery-public-data.stackoverflow.posts_questions` ),
-      votes AS (
-      SELECT
+WITH tags_per_question AS(
+       SELECT
+        id, tag, creation_date
+        FROM
+        `bigquery-public-data.stackoverflow.posts_questions`
+        CROSS JOIN
+        UNNEST(SPLIT(`bigquery-public-data.stackoverflow.posts_questions`.tags, "|")) AS tag
+), upvote_events_per_post AS (
+        SELECT
         post_id,
-        creation_date AS vote_date,
+        FORMAT_DATE('%Y-%m', DATE(creation_date)) AS month,
       FROM
         `bigquery-public-data.stackoverflow.votes`
-       )
-    SELECT
-      id,
-      splitted_tag,
-      score,
-      vote_date,
-    FROM
-      questions
-    INNER JOIN
-      votes
-    ON
-      votes.post_id = questions.id )
-  SELECT
-    tag,
-    PARSE_DATE('%Y-%m-%d', FORMAT_DATE('%Y-%m-01', DATE(vote_date))) AS votes_date,
-    COUNT(*) AS count,
-    SUM(score) AS upvotes,
-    70 as percentage
+        WHERE vote_type_id=2 -- i.e. the vote is an upvote
+        
+), upvotes_per_tag_per_month AS (
+  SELECT tag,
+  month,
+  COUNT(*) AS upvotes_this_month,
   FROM
-    DATA
-  CROSS JOIN
-    UNNEST(data.splitted_tag) AS tag
+  upvote_events_per_post INNER JOIN tags_per_question ON tags_per_question.id = upvote_events_per_post.post_id
   GROUP BY
-    tag,
-    votes_date
-  ORDER BY
-    votes_date DESC,
-    count DESC,
-    upvotes DESC 
+  tag,
+  month
+), total_upvote_per_month AS (
+  SELECT month, sum(upvotes_this_month) as upvotes_for_all_tags
+  FROM upvotes_per_tag_per_month
+  GROUP BY month
+)
+select 
+  upvotes_per_tag_per_month.month, 
+  tag, 
+  upvotes_this_month, 
+  upvotes_this_month / upvotes_for_all_tags AS share_among_all_upvotes
+from upvotes_per_tag_per_month
+inner join total_upvote_per_month on upvotes_per_tag_per_month.month = total_upvote_per_month.month
+order by 
+upvotes_per_tag_per_month.month desc, 
+upvotes_this_month desc
