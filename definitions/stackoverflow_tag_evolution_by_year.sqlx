@@ -1,0 +1,36 @@
+config {
+   type : "table"
+}
+
+WITH tag_popularity_with_year as(
+  SELECT cast(substring(month,0 ,4) as integer) as year, tag, upvotes_this_month, share_among_all_upvotes
+  FROM `tendances-tech-et-opportunites.dataform.stackoverflow_tags_popularity_in_questions_by_month` 
+),
+tags_popularity_by_year as (
+    SELECT year, sum(upvotes_this_month) as upvotes_this_year,tag, avg(share_among_all_upvotes) as share_among_all_upvotes
+    FROM tag_popularity_with_year 
+    GROUP BY year,tag
+),
+so_tag_evolution AS (
+    SELECT year_n.tag AS tag, year_n.year AS year, 
+    year_n.upvotes_this_year AS upvotes_year_n, year_n.share_among_all_upvotes AS share_year_n,
+    year_n_minus_1.upvotes_this_year AS upvotes_year_n_minus_1, year_n_minus_1.share_among_all_upvotes AS share_year_n_minus_1,
+    year_n_minus_2.upvotes_this_year AS upvotes_year_n_minus_2, year_n_minus_2.share_among_all_upvotes AS share_year_n_minus_2,
+    year_n_minus_3.upvotes_this_year AS upvotes_year_n_minus_3, year_n_minus_3.share_among_all_upvotes AS share_year_n_minus_3,
+    FROM tags_popularity_by_year AS year_n 
+    LEFT JOIN tags_popularity_by_year AS year_n_minus_1 ON year_n.tag=year_n_minus_1.tag AND year_n_minus_1.year=year_n.year - 1
+    LEFT JOIN tags_popularity_by_year AS year_n_minus_2 ON year_n.tag=year_n_minus_2.tag AND year_n_minus_2.year=year_n.year - 2
+    LEFT JOIN tags_popularity_by_year AS year_n_minus_3 ON year_n.tag=year_n_minus_3.tag AND year_n_minus_3.year=year_n.year - 3
+), so_tag_growth AS(
+    SELECT *, 
+        (share_year_n - share_year_n_minus_1)/share_year_n_minus_1 AS growth_year_n,
+        (share_year_n_minus_1 - share_year_n_minus_2)/share_year_n_minus_2 AS growth_year_n_minus_1,
+        (share_year_n_minus_2 - share_year_n_minus_3)/share_year_n_minus_3 AS growth_year_n_minus_2,
+        (share_year_n - share_year_n_minus_2)/share_year_n_minus_2 AS growth_over_2_previous_years,
+        (share_year_n - share_year_n_minus_3)/share_year_n_minus_3 AS growth_over_3_previous_years
+        FROM so_tag_evolution
+)
+SELECT *, 
+    least(growth_year_n, growth_year_n_minus_1) AS lowest_growth_over_2_last_years, -- The bigger this score the steadier the growth accross years. Eliminate buzz effect (e.g. for new versions of frameworks)
+    least(growth_year_n, growth_year_n_minus_1, growth_year_n_minus_2) AS lowest_growth_over_3_last_years
+FROM so_tag_growth
